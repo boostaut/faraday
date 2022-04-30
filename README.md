@@ -1,5 +1,7 @@
 ## About
 
+Modification : Bastien Chatelain
+
 Faraday introduces a new concept - IPE (Integrated Penetration-Test Environment) a multiuser Penetration test IDE. Designed for distributing, indexing, and analyzing the data generated during a security audit.
 
 > Made for true pentesters!
