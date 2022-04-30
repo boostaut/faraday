@@ -41,6 +41,29 @@ class InfoView(GenericView):
     get.is_public = True
 
 
+class BastienView(GenericView):
+    route_base = 'bastien'
+    schema_class = EmptySchema
+
+    def get(self):
+        """
+        ---
+        get:
+          tags: ["Informational"]
+          description: Gives basic info about the faraday service
+          responses:
+            200:
+              description: Ok
+        """
+
+        response = flask.jsonify({'Bastien': 'ChatelainTT'})
+        response.status_code = 200
+
+        return response
+
+    get.is_public = True
+
+
 class ConfigView(GenericView):
     route_base = 'config'
     route_prefix = ''
@@ -70,3 +93,4 @@ class ConfigView(GenericView):
 
 InfoView.register(info_api)
 ConfigView.register(info_api)
+BastienView.register(info_api)
