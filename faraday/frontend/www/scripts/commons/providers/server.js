@@ -416,7 +416,7 @@ angular.module("faradayApp")
             ServerAPI.decryptData = function (crypted_data, workspace_id) {
                 data = {
                     "data": crypted_data,
-                    "client_id" : ""+workspace_id+""
+                    "workspace_id" : ""+workspace_id+""
                 }
                 return serverComm("POST", DATACOLLECTORURL + "decryptData", JSON.stringify(data))
             }
@@ -424,7 +424,7 @@ angular.module("faradayApp")
             ServerAPI.cryptData = function (plaintext_data, workspace_id) {
                 data = {
                     "data": plaintext_data,
-                    "client_id" : ""+workspace_id+""
+                    "workspace_id" : ""+workspace_id+""
                 }
                 return serverComm("POST", DATACOLLECTORURL + "cryptData", JSON.stringify(data))
             }
@@ -432,11 +432,11 @@ angular.module("faradayApp")
             ServerAPI.createAndSendWorkspaceCryptKey = function (workspace_id) {
                 let rand = Math.random().toString(16).substr(2, 50);
                 data = {
-                    "client_id": ""+workspace_id+"",
-                    "client_key" : rand
+                    "workspace_id": ""+workspace_id+"",
+                    "workspace_key" : rand
                 }
                 console.log("send data = " + data)
-                return serverComm("POST", DATACOLLECTORURL + "clientKey", JSON.stringify(data))
+                return serverComm("POST", DATACOLLECTORURL + "workspaceKey", JSON.stringify(data))
             }
 
              ServerAPI.getCustomFields = function () {

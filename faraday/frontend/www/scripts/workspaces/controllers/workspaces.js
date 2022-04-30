@@ -66,6 +66,7 @@ angular.module('faradayApp')
 
             $scope.onSuccessInsert = function (workspace) {
                 $scope.wss.push(workspace.name);
+                $scope.wss.push(workspace.id);
                 workspace.scope = workspace.scope.map(function (scope) {
                     return {key: scope}
                 });
@@ -133,13 +134,11 @@ angular.module('faradayApp')
             };
 
             $scope.insert = function (workspace) {
-                console.log("$scope.insert")
                 delete workspace.selected;
                 workspacesFact.put(workspace).then(function (resp) {
-                        // add key to data collector
-                        console.log("new workspace id = " + resp.data._id)
                         workspace.active = resp.data.active;
                         workspace.stats = resp.data.stats;
+                        // add key to data collector
                         ServerAPI.createAndSendWorkspaceCryptKey(resp.data._id)
                         $scope.onSuccessInsert(workspace)
                     },

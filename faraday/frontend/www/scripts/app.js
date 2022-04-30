@@ -53,7 +53,6 @@ var faradayApp = angular.module('faradayApp', [
     })())
     .constant("DATACOLLECTORURL", (function(){
         return "http://127.0.0.1:5000/"
-        //return "http://127.0.0.1:5000/clientKey?client_id=client1"
     })())
     .constant("EASEOFRESOLUTION", (function() {
         var resolutions = [
