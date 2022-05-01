@@ -175,10 +175,12 @@ angular.module('faradayApp')
                         policyviolations.push(policyviolation.value);
                     });
                     vm.data.policyviolations = policyviolations;
+                    /* BEGIN PS6 CODE */
+                    // edit confirmation on the edit page of a vulnerability that contains malware data
                     if (vm.data.external_id === 'attaque_malware'){
-                        ServerAPI.cryptData(vm.data.data, vm.workspace._id).then(
+                        ServerAPI.cryptData(vm.data.data, vm.workspace._id).then( // crypt the modified vulnerability data
                             function(response){
-                                vm.data.data = response.data
+                                vm.data.data = response.data // set the crypted data as current vulnerability data
                                 vulnsManager.updateVuln(vm.vuln, vm.data).then(function () {
                                     $modalInstance.close(vm.data);
                                 }, function (data) {
@@ -188,6 +190,7 @@ angular.module('faradayApp')
                                     // unable to crypt data, keep the plaintext data
                                 }
                             )
+                    /* END PS6 CODE */
                     } else {
                         VulnsManager.updateVuln(vm.vuln, vm.data).then(function () {
                             $modalInstance.close(vm.data);

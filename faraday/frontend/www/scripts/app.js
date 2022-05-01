@@ -51,9 +51,12 @@ var faradayApp = angular.module('faradayApp', [
         }
         return url;
     })())
+    /* BEGIN PS6 CODE */
+    // URL to do request to the data collector API
     .constant("DATACOLLECTORURL", (function(){
         return "http://127.0.0.1:5000/"
     })())
+    /* END PS6 CODE */
     .constant("EASEOFRESOLUTION", (function() {
         var resolutions = [
             "trivial",

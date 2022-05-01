@@ -2,9 +2,9 @@
 // Copyright (C) 2013  Infobyte LLC (http://www.infobytesec.com/)
 // See the file 'doc/LICENSE' for the license information
 
-angular.module('faradayApp')
-    .controller('workspacesCtrl', ['$uibModal', '$scope', '$q', 'workspacesFact', 'dashboardSrv', '$location', '$cookies', 'ServerAPI',
-        function ($uibModal, $scope, $q, workspacesFact, dashboardSrv, $location, $cookies, ServerAPI) {
+angular.module('faradayApp') // import ServerAPI to do HTTP request
+    .controller('workspacesCtrl', ['$uibModal', '$scope', '$q', 'workspacesFact', 'dashboardSrv', '$location', '$cookies', 'ServerAPI', // PS6 CODE
+        function ($uibModal, $scope, $q, workspacesFact, dashboardSrv, $location, $cookies, ServerAPI) { // PS6 CODE
             $scope.hash;
             $scope.objects;
             $scope.workspaces;
@@ -138,8 +138,8 @@ angular.module('faradayApp')
                 workspacesFact.put(workspace).then(function (resp) {
                         workspace.active = resp.data.active;
                         workspace.stats = resp.data.stats;
-                        // add key to data collector
-                        ServerAPI.createAndSendWorkspaceCryptKey(resp.data._id)
+                        // add key to data collector with the workspace_id
+                        ServerAPI.createAndSendWorkspaceCryptKey(resp.data._id) // PS6 CODE
                         $scope.onSuccessInsert(workspace)
                     },
                     $scope.onFailInsert);

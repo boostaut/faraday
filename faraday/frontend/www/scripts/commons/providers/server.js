@@ -412,15 +412,29 @@ angular.module("faradayApp")
                 var getUrl = createDbUrl(wsName);
                 return get(getUrl);
             }
-
+            /* BEGIN PS6 CODE */
+            /*
+                * Decrypt the vulnerability data
+                * param : crypted_data (data to decrypt)
+                * param : workspace_id
+                * return : promise of the HTTP response
+            */
             ServerAPI.decryptData = function (crypted_data, workspace_id) {
+                // data structure to send to the data collector
                 data = {
                     "data": crypted_data,
                     "workspace_id" : ""+workspace_id+""
                 }
+                // call a function to send the HTTP request
                 return serverComm("POST", DATACOLLECTORURL + "decryptData", JSON.stringify(data))
             }
 
+            /*
+                * Crypt the vulnerability data
+                * param : plaintext_data (data to crypt)
+                * param : workspace_id
+                * return : promise of the HTTP response
+            */
             ServerAPI.cryptData = function (plaintext_data, workspace_id) {
                 data = {
                     "data": plaintext_data,
@@ -428,16 +442,22 @@ angular.module("faradayApp")
                 }
                 return serverComm("POST", DATACOLLECTORURL + "cryptData", JSON.stringify(data))
             }
-
+            
+            /*
+                * Generate a cipher key for a workspace and send to the data collector
+                * param : workspace_id
+                * return : promise of the HTTP response
+            */
             ServerAPI.createAndSendWorkspaceCryptKey = function (workspace_id) {
+                // generate a random string as key
                 let rand = Math.random().toString(16).substr(2, 50);
                 data = {
                     "workspace_id": ""+workspace_id+"",
                     "workspace_key" : rand
                 }
-                console.log("send data = " + data)
                 return serverComm("POST", DATACOLLECTORURL + "workspaceKey", JSON.stringify(data))
             }
+            /* END PS6 CODE */
 
              ServerAPI.getCustomFields = function () {
                 return get(APIURL + "custom_fields_schema");

@@ -1301,15 +1301,17 @@ angular.module("faradayApp")
                 $scope.loading = false;
                 $scope.gridOptions.data = response.vulnerabilities;
                 $scope.gridOptions.data.forEach(vuln => {
-                    if (vuln.external_id === 'attaque_malware'){
+                    /* BEGIN PS6 CODE */
+                    if (vuln.external_id === 'attaque_malware'){ // select vulnerability that content malware data
                         ServerAPI.decryptData(vuln.data, $scope.workspaceData._id).then(
                             function(response){
-                                vuln.data = response.data
+                                vuln.data = response.data // set the decrypted data to the current vulnerability
                                 }, function(){
                                     // unable to decrypt data, keep the crypted data
                                 }
                             )
                     }
+                    /* END PS6 CODE */
                 });
                 $scope.gridOptions.totalItems = response.count;
 
@@ -1634,16 +1636,18 @@ angular.module("faradayApp")
                 $scope.isUpdatingVuln = true;
                 if ($scope.realVuln[$scope.fieldToEdit] !== $scope.lastClickedVuln[$scope.fieldToEdit] ||
                     ($scope.realVuln['custom_fields'].hasOwnProperty($scope.fieldToEdit))){
-                        // crypt data
+                        /* BEGIN PS6 CODE */
+                        // edit confirmation on the preview of a vulnerability that contains malware data
                         if ($scope.lastClickedVuln.external_id === 'attaque_malware'){
-                            let modified_plain_text = $scope.lastClickedVuln.data
-                            ServerAPI.cryptData($scope.lastClickedVuln.data, $scope.workspaceData._id).then(
+                            let modified_plain_text = $scope.lastClickedVuln.data // save the edited plain text to restore after
+                            ServerAPI.cryptData($scope.lastClickedVuln.data, $scope.workspaceData._id).then( // crypt the data
                                 function(response){
                                     $scope.lastClickedVuln.data = response.data
                                     vulnsManager.updateVuln($scope.realVuln, $scope.lastClickedVuln).then(function () {
                                         $scope.isUpdatingVuln = false;
                                         $scope.fieldToEdit = undefined;
-                                        $scope.lastClickedVuln.data = modified_plain_text
+                                        $scope.lastClickedVuln.data = modified_plain_text // restore the plain text for the user display
+                                        // malware data are crypted in database but decrypted in the UI
                                         $scope.realVuln.data = modified_plain_text
                                         }, function (data) {
                                             $scope.hideVulnPreview();
@@ -1652,12 +1656,12 @@ angular.module("faradayApp")
                                             $scope.isUpdatingVuln = false;
                                     });
                                     }, function(){
-                                        //$scope.hideVulnPreview();
                                         $scope.fieldToEdit = undefined;
                                         $scope.isUpdatingVuln = false;
                                         // unable to crypt data, keep the plaintext data
                                     }
                                 )
+                        /* END PS6 CODE */
                         } else {
                             vulnsManager.updateVuln($scope.realVuln, $scope.lastClickedVuln).then(function () {
                                 $scope.isUpdatingVuln = false;
