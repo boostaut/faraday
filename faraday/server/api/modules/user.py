@@ -168,7 +168,7 @@ class UserView(GenericView):
           print("user deleted")
           response = flask.jsonify({'success':'user deleted'})
           response.status_code = 200
-          rseturn response
+          return response
         else:
           print("user not found")
           response = flask.jsonify({'error':'user not found'})
