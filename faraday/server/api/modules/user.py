@@ -11,12 +11,13 @@ from faraday.server.api.base import GenericView
 from faraday.server.config import faraday_server
 from faraday.settings.dashboard import DashboardSettings
 from flask_security.utils import hash_password
-from faraday.server.models import User, db
+from faraday.server.models import User, db, Role, WorkspacePermission
 import string
 import random
 import json
 
 from faraday.server.utils.database import get_or_create
+
 
 user_api = Blueprint('user_api', __name__)
 
@@ -42,12 +43,19 @@ class UserView(GenericView):
         user_list = User.query.all()
         user_list_json = []
         for user in user_list:
-          print("username :")
-          print(user.username)
+          role_id = 3
+          workspaces_id = []
+          if user.roles:
+            role_id = user.roles[0].id
+          if user.workspace_permission_instances:
+            for element in user.workspace_permission_instances:
+              workspaces_id.append(element.workspace_id)
           user_json = {
             "id":user.id,
             "username": user.username,
-            "name": user.name
+            "name": user.name,
+            "role_id": role_id,
+            "workspaces_id": workspaces_id
           }
           user_list_json.append(user_json)
         list_json = json.dumps(user_list_json)
@@ -75,12 +83,17 @@ class UserView(GenericView):
             res = ''.join(random.choices(string.ascii_uppercase +
                              string.digits, k = 36))
             instance, created = get_or_create(db.session,User, username=user_json['username'],fs_uniquifier=str(res))
+            role = Role.query.filter_by(id=user_json['role_id']).first()
             instance.name = user_json['name']
             instance.password = hash_password(user_json['password'])
-            # TODO : add role, user_json['role]
+            instance.roles.append(role)
+            if 'workspaces_id' in user_json:
+              for ws_id in user_json['workspaces_id']:
+                ws_instance, ws_created = get_or_create(db.session, WorkspacePermission, user_id=instance.id, workspace_id=ws_id)
             db.session.commit()
-          except:
-            print("Unable to create a new user")
+          except Exception as e:
+            print("Unable to create a new user, error = ")
+            print(e)
         # END create a new user
         
         response = flask.jsonify({'user': 'post'})
@@ -120,6 +133,16 @@ class UserView(GenericView):
           if 'password' in user_json:
             print("password is in json data")
             user.password =  hash_password(user_json['password'])
+          if 'role_id' in user_json:
+            role = Role.query.filter_by(id=user_json['role_id']).first()
+            user.roles = []
+            user.roles.append(role)
+          if 'workspaces_id' in user_json:
+            user.workspace_permission_instances = []
+            if len(user_json['workspaces_id']) > 0:
+              for ws_id in user_json['workspaces_id']:
+                ws_instance, ws_created = get_or_create(db.session, WorkspacePermission, user_id=user.id, workspace_id=ws_id)
+          
           db.session.add(user)
           db.session.commit()
           response = flask.jsonify({'success':'user updated'})

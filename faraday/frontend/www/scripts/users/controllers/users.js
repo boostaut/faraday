@@ -3,70 +3,104 @@
 // See the file 'doc/LICENSE' for the license information
 
 angular.module('faradayApp') // import ServerAPI to do HTTP request
-    .controller('workspacesCtrl', ['$uibModal', '$scope', '$q', 'workspacesFact', 'dashboardSrv', '$location', '$cookies', 'ServerAPI', // PS6 CODE
-        function ($uibModal, $scope, $q, workspacesFact, dashboardSrv, $location, $cookies, ServerAPI) { // PS6 CODE
-            $scope.hash;
-            $scope.objects;
-            $scope.workspaces;
-            $scope.wss;
-            $scope.search;
-            
-            $scope.current_user = null;
-            $scope.auth = loginSrv.isAuth();    
-
-            $scope.$watch(loginSrv.isAuth, function(newValue) {
-                loginSrv.getUser().then(function(user){
-                    $scope.current_user = user;
-                    $scope.auth = newValue;
-                    console.log("user")
-                    console.log(user)
-                });
-            });
+    .controller('usersCtrl', ['$uibModal', '$scope', '$q','usersFact', 'dashboardSrv', '$location', '$cookies', 'ServerAPI', // PS6 CODE
+        function ($uibModal, $scope, $q, usersFact, dashboardSrv, $location, $cookies, ServerAPI) { // PS6 CODE
+            $scope.users
+            $scope.currentEditedUserId
+            $scope.newUser = {
+                "name":"",
+                "username":"",
+                "password":"",
+                "repeated_password":"",
+                "role":"",
+                "workspace":""
+            }
 
             $scope.init = function () {
-                $scope.objects = [];
-                $scope.workspaces = [];
-                $scope.wss = [];
-                $scope.archived = false;
-                // $scope.newworkspace = {};
-
-                var hash_tmp = window.location.hash.split("/")[1];
-                switch (hash_tmp) {
-                    case "status":
-                        $scope.hash = "status";
-                        break;
-                    case "dashboard":
-                        $scope.hash = "dashboard";
-                        break;
-                    case "hosts":
-                        $scope.hash = "hosts";
-                        break;
-                    default:
-                        $scope.hash = "";
-                }
-
-                workspacesFact.getWorkspaces().then(function (wss) {
-
-                    $scope.wss = []; // Store workspace names
-                    wss.forEach(function (ws) {
-                        $scope.wss.push(ws.name);
-                        $scope.onSuccessGet(ws);
-                        $scope.objects[ws.name] = {
-                            "total_vulns": "-",
-                            "hosts": "-",
-                            "services": "-"
-                        };
-                        for (var stat in ws.stats) {
-                            if (ws.stats.hasOwnProperty(stat)) {
-                                if ($scope.objects[ws.name].hasOwnProperty(stat))
-                                    $scope.objects[ws.name][stat] = ws.stats[stat];
-                            }
-                        }
-                        ;
-                    });
+                console.log("usersCtrl init")
+                usersFact.getUsers().then(function (users) {
+                    console.log("usersCtrl getUsers")
+                    console.log(users)
+                    $scope.users = users
                 });
             };
 
+            $scope.addUser = function () {
+                newUser = {
+                    "name":$scope.newUser.name,
+                    "username":$scope.newUser.username,
+                    "password":$scope.newUser.password
+                }
+
+                ServerAPI.addUser(newUser).then(function(response){
+                    console.log("user successfully created")
+                    $scope.init()
+                    $scope.newUser = {
+                        "name":"",
+                        "username":"",
+                        "password":"",
+                        "repeated_password":"",
+                        "role":"",
+                        "workspace":""
+                    }
+                })
+            };
+
+            $scope.addUser = function () {
+                
+                if($scope.newUser.username == "" | $scope.newUser.name == "" | $scope.newUser.role == "" |$scope.newUser.workspace == "" | $scope.newUser.password == "" | $scope.newUser.repeated_password == ""){
+                    alert("Il faut remplir tous les champs")
+                    return
+                }
+                
+                if($scope.newUser.password != $scope.newUser.repeated_password){
+                    alert("Les mots de passe ne correspondent pas")
+                    return
+                }
+                
+                newUser = {
+                    "name":$scope.newUser.name,
+                    "username":$scope.newUser.username,
+                    "password":$scope.newUser.password
+                }
+
+                ServerAPI.addUser(newUser).then(function(response){
+                    console.log("user successfully created")
+                    $scope.init()
+                    $scope.newUser = {
+                        "name":"",
+                        "username":"",
+                        "password":"",
+                        "repeated_password":"",
+                        "role":"",
+                        "workspace":""
+                    }
+                })
+            };
+            
+            $scope.deleteUser = function (user_id) {
+                console.log("button clicked, id = " + user_id)
+                ServerAPI.deleteUser(user_id).then(function(response){
+                    $scope.init()
+                })
+            };
+
+            $scope.editUser = function (user) {
+                $scope.currentEditedUserId = user.id
+                $scope.init()
+            };
+
+            $scope.updateUser = function (user) {
+                $scope.currentEditedUserId = -1
+                console.log("user password = " + user.password)
+                ServerAPI.updateUser(user).then(function(response){
+                    console.log("user successfully updated")
+                    $scope.init()
+                })
+                $scope.init()
+            };
+
+            /*
             $scope.onSuccessGet = function (workspace) {
                 workspace.selected = false;
                 workspace.scope = workspace.scope.map(function (scope) {
@@ -75,6 +109,7 @@ angular.module('faradayApp') // import ServerAPI to do HTTP request
                 if (workspace.scope.length == 0) workspace.scope.push({key: ''});
                 $scope.workspaces.push(workspace);
             };
+            
 
             $scope.onSuccessInsert = function (workspace) {
                 $scope.wss.push(workspace.name);
@@ -342,12 +377,6 @@ angular.module('faradayApp') // import ServerAPI to do HTTP request
                 return (workspace);
             };
 
-            $scope.redirect = function (path) {
-                $location.path("/" + ($location.path().split('/')[1] || 'dashboard') + "/ws/" + path);
-            };
-            $scope.dashboardRedirect = function (path) {
-                $location.path("/dashboard/ws/" + path);
-            };
 
             $scope.clearSearch = function () {
                 $scope.search = '';
@@ -407,6 +436,7 @@ angular.module('faradayApp') // import ServerAPI to do HTTP request
                 ws.readonly = resp.data.readonly;
             });
         };
-
+        */
             $scope.init();
         }]);
+        

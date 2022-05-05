@@ -297,6 +297,11 @@ faradayApp.config(['$routeProvider', '$uibTooltipProvider', 'BASEURL',
             controller: 'workspacesCtrl',
             title: 'Workspaces | '
         }).
+        when('/users', {
+            templateUrl: 'scripts/users/partials/userUi.html',
+            controller: 'usersCtrl'
+            //title: 'Users |'
+        }).
         when('/comparison', {
             templateUrl: 'scripts/commons/partials/commercial.html',
             controller: 'commercialCtrl'

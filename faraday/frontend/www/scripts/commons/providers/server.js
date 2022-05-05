@@ -420,6 +420,8 @@ angular.module("faradayApp")
                 * return : promise of the HTTP response
             */
             ServerAPI.decryptData = function (crypted_data, workspace_id) {
+                console.log("BASEURL")
+                console.log(BASEURL+"_api/v3/user")
                 // data structure to send to the data collector
                 data = {
                     "data": crypted_data,
@@ -458,6 +460,29 @@ angular.module("faradayApp")
                 return serverComm("POST", DATACOLLECTORURL + "workspaceKey", JSON.stringify(data))
             }
             /* END PS6 CODE */
+
+            /*
+                * Get all user
+                * param : -
+                * return : promise of the HTTP response
+            */
+            ServerAPI.getAllUsers = function () {
+                return serverComm("GET", BASEURL+"_api/v3/user")
+            }
+
+            ServerAPI.deleteUser = function (user_id) {
+                return serverComm("DELETE", BASEURL+"_api/v3/user?id="+user_id)
+            }
+
+            ServerAPI.addUser = function (user) {
+                console.log("create user")
+                return serverComm("POST", BASEURL+"_api/v3/user", JSON.stringify(user))
+            }
+
+            ServerAPI.updateUser = function (user) {
+                console.log("update user")
+                return serverComm("PATCH", BASEURL+"_api/v3/user", JSON.stringify(user))
+            }
 
              ServerAPI.getCustomFields = function () {
                 return get(APIURL + "custom_fields_schema");
