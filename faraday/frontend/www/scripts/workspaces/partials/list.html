@@ -9,7 +9,7 @@
             <div ng-controller="headerCtrl" ng-include="'scripts/commons/partials/header.html'"></div>
             <div id="reports-main" class="fila clearfix">
             <div class="reports col-md-12 col-sm-12 col-xs-12">
-                <div ng-if="current_user.username != 'faraday'" class="button-control justify-flex-start  col-md-12 col-sm-12 col-xs-12">
+                <div ng-if="current_user.role_id == 1" class="button-control justify-flex-start  col-md-12 col-sm-12 col-xs-12">
                     <div class="control-wrapper control-new">
                         <button id="merge" type="button" class="btn btn-success btn-new" title="New Workspace" ng-click="new()">
                             New
@@ -47,49 +47,51 @@
                         </div>
                     </div>
                 </div>
-                <h4 ng-if="current_user.username == 'faraday'">Le ID du workspace est l'ID à mentionner dans le malware afin les données récoltées soient acheminées dans le workspace correspondant.</h4> <!-- PS6 CODE-->
+                <h4 ng-if="current_user.role_id == 1">Le ID du workspace est l'ID à mentionner dans le malware afin les données récoltées soient acheminées dans le workspace correspondant.</h4> <!-- PS6 CODE-->
                 <table class="table-v3 table table-responsive">
                     <thead>
                         <tr class="ui-grid-header">
                             <th class="ui-grid-cell-contents ui-grid-header-cell">
                                 <a href="" ng-click="toggleSort('name')">Name</a>
                             </th>
-                            <th ng-if="current_user.username == 'faraday'" class="ui-grid-cell-contents ui-grid-header-cell">ID</th> <!-- PS6 CODE-->
+                            <th ng-if="current_user.role_id == 1" class="ui-grid-cell-contents ui-grid-header-cell">ID</th> <!-- PS6 CODE-->
                             <th class="ui-grid-cell-contents ui-grid-header-cell">Vulns</th>
                             <th class="ui-grid-cell-contents ui-grid-header-cell">Hosts</th>
                             <th class="ui-grid-cell-contents ui-grid-header-cell">Services</th>
-                            <th ng-if="current_user.username == 'faraday'" class="ui-grid-cell-contents ui-grid-header-cell">Start Date</th>
-                            <th ng-if="current_user.username == 'faraday'" class="ui-grid-cell-contents ui-grid-header-cell">End Date</th>
-                            <th ng-if="current_user.username == 'faraday'" class="ui-grid-cell-contents ui-grid-header-cell">Last Modified</th>
-                            <th ng-if="current_user.username == 'faraday'" class="ui-grid-cell-contents ui-grid-header-cell">Active</th>
-                            <th ng-if="current_user.username == 'faraday'" class="ui-grid-cell-contents ui-grid-header-cell">Read only</th>
+                            <th ng-if="current_user.role_id == 1" class="ui-grid-cell-contents ui-grid-header-cell">Start Date</th>
+                            <th ng-if="current_user.role_id == 1" class="ui-grid-cell-contents ui-grid-header-cell">End Date</th>
+                            <th ng-if="current_user.role_id == 1" class="ui-grid-cell-contents ui-grid-header-cell">Last Modified</th>
+                            <th ng-if="current_user.role_id == 1" class="ui-grid-cell-contents ui-grid-header-cell">Active</th>
+                            <th ng-if="current_user.role_id == 1" class="ui-grid-cell-contents ui-grid-header-cell">Read only</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr ng-repeat="ws in workspaces | filter:query | filter:search  | filter:{active:archived == false? true : undefined} | orderBy:sortField:reverse"
                             selection-model selection-model-selected-class="multi-selected">
+                            
+                        
                             <td class="ui-grid-cell-contents">
                                 <span class="onhover upsize" ng-click="dashboardRedirect(ws.name)">
                                    <b>{{ws.name}}</b>
                                 </span>
                             </td>
-                            <td ng-if="current_user.username == 'faraday'" class="ui-grid-cell-contents">{{ws.id}}</td> <!-- PS6 CODE -> display the workspace_id -->
+                            <td ng-if="current_user.role_id == 1" class="ui-grid-cell-contents">{{ws.id}}</td> <!-- PS6 CODE -> display the workspace_id -->
                             <td class="ui-grid-cell-contents"><a href="#/status/ws/{{ws.name}}">{{objects[ws.name]['total_vulns']}}</a></td>
                             <td class="ui-grid-cell-contents"><a href="#/hosts/ws/{{ws.name}}">{{objects[ws.name]['hosts']}}</a></td>
                             <td class="ui-grid-cell-contents" ng-bind="objects[ws.name]['services']"></td>
-                            <td ng-if="current_user.username == 'faraday'" class="ui-grid-cell-contents" ng-if="ws.duration.start_date" ng-bind="ws.duration.start_date | amTimeAgo"></td>
-                            <td ng-if="current_user.username == 'faraday'" class="ui-grid-cell-contents" ng-if="!ws.duration.start_date">-</td>
-                            <td ng-if="current_user.username == 'faraday'" class="ui-grid-cell-contents" ng-if="ws.duration.end_date" ng-bind="ws.duration.end_date | amTimeAgo"></td>
-                            <td ng-if="current_user.username == 'faraday'" class="ui-grid-cell-contents" ng-if="!ws.duration.end_date">-</td>
-                            <td ng-if="current_user.username == 'faraday'" class="ui-grid-cell-contents" ng-bind="ws.update_date | amTimeAgo"></td>
-                            <td ng-if="current_user.username == 'faraday'" class="ui-grid-cell-contents active-toggle">
+                            <td ng-if="current_user.role_id == 1" class="ui-grid-cell-contents" ng-if="ws.duration.start_date" ng-bind="ws.duration.start_date | amTimeAgo"></td>
+                            <td ng-if="current_user.role_id == 1" class="ui-grid-cell-contents" ng-if="!ws.duration.start_date">-</td>
+                            <td ng-if="current_user.role_id == 1" class="ui-grid-cell-contents" ng-if="ws.duration.end_date" ng-bind="ws.duration.end_date | amTimeAgo"></td>
+                            <td ng-if="current_user.role_id == 1" class="ui-grid-cell-contents" ng-if="!ws.duration.end_date">-</td>
+                            <td ng-if="current_user.role_id == 1" class="ui-grid-cell-contents" ng-bind="ws.update_date | amTimeAgo"></td>
+                            <td ng-if="current_user.role_id == 1" class="ui-grid-cell-contents active-toggle">
                                 <div class="toogle-img-container">
                                     <span ng-click="activeToggle(ws)" class="active-toggle-container" ng-class="{ disabled:ws.active === false }" uib-tooltip="{{(ws.active === true) ? 'Disable workspace' : 'Enable workspace'}}" tooltip-placement="right">
                                         <img ng-src="{{ (ws.active) ? 'images/ok-active.svg' : 'images/active.svg'}}" class="confirm-icon" ng-style="{ 'opacity': (ws.active === true) ? '1' : '0.7' }" />
                                     </span>
                                 </div>
                             </td>
-                            <td ng-if="current_user.username == 'faraday'" class="ui-grid-cell-contents active-toggle">
+                            <td ng-if="current_user.role_id == 1" class="ui-grid-cell-contents active-toggle">
                                 <div class="toogle-img-container">
                                     <span ng-click="readonlyToggle(ws)" class="active-toggle-container" ng-class="{ disabled:ws.readonly === false }" uib-tooltip="{{(ws.readonly === false) ? 'Workspace with all permissions' : 'Workspace read only'}}" tooltip-placement="right">
                                         <img ng-src="{{ (ws.readonly == true) ? 'images/padlock_closed.svg' : 'images/padlock_open.svg'}}" class="confirm-icon" ng-style="{ 'opacity': (ws.readonly === true) ? '1' : '0.7' }" />

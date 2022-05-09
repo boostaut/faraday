@@ -16,6 +16,7 @@ angular.module('faradayApp')
         'workspacesFact',
         'Notification',
         '$rootScope',
+        'ServerAPI',
         function ($scope,
                   $http,
                   $route,
@@ -27,7 +28,8 @@ angular.module('faradayApp')
                   configSrv,
                   workspacesFact,
                   Notification,
-                  $rootScope) {
+                  $rootScope,
+                  ServerAPI) {
 
         $scope.workspace = "";
 
@@ -45,6 +47,14 @@ angular.module('faradayApp')
             $scope.timer;
 
         var componentsNeedsWS = ["dashboard","status","hosts"];
+
+        $scope.$watch(loginSrv.isAuth, function(newValue) {
+            loginSrv.getUser().then(function(user){
+                ServerAPI.getUserById(user.user_id).then(function(response){
+                    $scope.current_user = JSON.parse(response.data)[0]
+                })
+            });
+        });
 
         $scope.checkNews = function() {
              $http.get('https://portal.faradaysec.com/api/v1/license_check?version=' + configSrv.faraday_version + '&key=white').then(function(response) {

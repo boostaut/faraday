@@ -14,14 +14,7 @@ angular.module('faradayApp') // import ServerAPI to do HTTP request
             $scope.current_user = null;
             $scope.auth = loginSrv.isAuth();    
 
-            $scope.$watch(loginSrv.isAuth, function(newValue) {
-                loginSrv.getUser().then(function(user){
-                    $scope.current_user = user;
-                    $scope.auth = newValue;
-                    console.log("user")
-                    console.log(user)
-                });
-            });
+            
 
             $scope.init = function () {
                 $scope.objects = [];
@@ -45,26 +38,41 @@ angular.module('faradayApp') // import ServerAPI to do HTTP request
                         $scope.hash = "";
                 }
 
-                workspacesFact.getWorkspaces().then(function (wss) {
+                $scope.$watch(loginSrv.isAuth, function(newValue) {
+                    loginSrv.getUser().then(function(user){
+                        //$scope.current_user = user;
+                        $scope.auth = newValue;
+                        console.log("user")
+                        console.log(user.user_id)
+                        ServerAPI.getUserById(user.user_id).then(function(response){
+                            $scope.current_user = JSON.parse(response.data)[0]
 
-                    $scope.wss = []; // Store workspace names
-                    wss.forEach(function (ws) {
-                        $scope.wss.push(ws.name);
-                        $scope.onSuccessGet(ws);
-                        $scope.objects[ws.name] = {
-                            "total_vulns": "-",
-                            "hosts": "-",
-                            "services": "-"
-                        };
-                        for (var stat in ws.stats) {
-                            if (ws.stats.hasOwnProperty(stat)) {
-                                if ($scope.objects[ws.name].hasOwnProperty(stat))
-                                    $scope.objects[ws.name][stat] = ws.stats[stat];
-                            }
-                        }
-                        ;
+                            workspacesFact.getWorkspaces().then(function (wss) {
+                                $scope.wss = []; // Store workspace names
+                                wss.forEach(function (ws) {
+                                    $scope.wss.push(ws.name);
+                                    $scope.onSuccessGet(ws);
+                                    $scope.objects[ws.name] = {
+                                        "total_vulns": "-",
+                                        "hosts": "-",
+                                        "services": "-"
+                                    };
+                                    for (var stat in ws.stats) {
+                                        if (ws.stats.hasOwnProperty(stat)) {
+                                            if ($scope.objects[ws.name].hasOwnProperty(stat))
+                                                $scope.objects[ws.name][stat] = ws.stats[stat];
+                                        }
+                                    }
+                                    ;
+                                });
+                            });
+
+
+                        })
                     });
                 });
+
+                
             };
 
             $scope.onSuccessGet = function (workspace) {
@@ -73,7 +81,10 @@ angular.module('faradayApp') // import ServerAPI to do HTTP request
                     return {key: scope}
                 });
                 if (workspace.scope.length == 0) workspace.scope.push({key: ''});
-                $scope.workspaces.push(workspace);
+                if ($scope.current_user.role_id == 1 || $scope.current_user.workspaces_id.includes(workspace.id)){
+                    $scope.workspaces.push(workspace);
+                }
+                
             };
 
             $scope.onSuccessInsert = function (workspace) {

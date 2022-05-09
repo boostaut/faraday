@@ -6,10 +6,10 @@
   <div class="faraday-header-border-fix"></div>
     <div class="left-main">
 		<div ng-controller="headerCtrl" ng-include="'scripts/commons/partials/header.html'"></div>
-        <div id="reports-main" class="fila clearfix">
+        <div ng-if="workspace" id="reports-main" class="fila clearfix">
             <div class="button-control col-md-12 col-sm-12 col-xs-12" id="btn_bar">                
                 <div class="control-wrapper control-new">
-                    <button type="button" class="btn btn-success btn-new" title="{{workspaceData.readonly == true ? 'Read-only. Workspace disabled': 'New Vulns'}}"  ng-click="new()" ng-disabled="workspaceData.readonly == true">
+                    <button ng-if="current_user.role_id == 1" type="button" class="btn btn-success btn-new" title="{{workspaceData.readonly == true ? 'Read-only. Workspace disabled': 'New Vulns'}}"  ng-click="new()" ng-disabled="workspaceData.readonly == true">
                         New
                     </button>
                 </div>
@@ -27,13 +27,13 @@
                                     </a>
                                     <div class="flex-spacer"></div>
                                 </th>
-                                <th class="col-md-2">
+                                <th ng-if="current_user.role_id == 1" class="col-md-2">
                                     <a href="#/credentials/ws/{{workspace}}" class="workspaces" ng-class="{'navigation-active' : component == 'credentials'}" style="color: black !important; font-weight: bold; font-size: 15px;" uib-tooltip="Credentials" tooltip-placement="right">
                                         Credentials
                                     </a>
                                     <div class="flex-spacer"></div>
                                 </th>
-                                <th class="col-md-2" style = "border-right: 1px solid rgb(221, 221, 221); padding-right: 12px">
+                                <th ng-if="current_user.role_id == 1" class="col-md-2" style = "border-right: 1px solid rgb(221, 221, 221); padding-right: 12px">
                                     <a href="#/taskgroup" class="executive-report" ng-class="{'navigation-active' : component == 'taskgroup'}" style="color: black !important; font-weight: bold; font-size: 15px;">
                                         Tasks
                                     </a>
@@ -43,7 +43,7 @@
                         </thead>
                     </table>
                 <div class="control-wrapper control-edit">
-                    <button type="button" class="btn btn-default edit" title="{{workspaceData.readonly == true ? 'Read-only. Workspace disabled': 'Edit selected vulns'}}" ng-click="edit()" ng-disabled="getCurrentSelection().length != 1">
+                    <button ng-if="current_user.role_id == 1" type="button" class="btn btn-default edit" title="{{workspaceData.readonly == true ? 'Read-only. Workspace disabled': 'Edit selected vulns'}}" ng-click="edit()" ng-disabled="getCurrentSelection().length != 1">
                         <img src="images/icon-toolbar-edit.svg" class="edit-icon" />
                     </button>
                     <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" title="SingleActions" ng-show="getCurrentSelection().length === 1"  ng-disabled="workspaceData.readonly == true">
@@ -85,7 +85,7 @@
                     </ul>
                 </div>
                 <div class="control-wrapper">
-                    <button type="button" class="btn btn-default" title="{{workspaceData.readonly == true? 'Read-only. Workspace disabled': 'Delete selected items'}}" ng-click="delete()" ng-disabled="workspaceData.readonly == true">
+                    <button ng-if="current_user.role_id == 1" type="button" class="btn btn-default" title="{{workspaceData.readonly == true? 'Read-only. Workspace disabled': 'Delete selected items'}}" ng-click="delete()" ng-disabled="workspaceData.readonly == true">
                         <img src="images/icon-toolbar-delete.svg" class="delete-icon" />
                     </button>
                 </div>
@@ -107,7 +107,7 @@
                         <img src="images/icon-toolbar-download.svg" class="download-icon" />
                     </button>
                 </div>
-                <div class="control-wrapper download-wrapper" ng-hide="fileUploadEnabled === true">
+                <div ng-if="current_user.role_id == 1" class="control-wrapper download-wrapper" ng-hide="fileUploadEnabled === true">
                     <button ng-click="enableFileUpload()" type="button" class="btn btn-default" title="{{workspaceData.readonly == true ? 'Read-only. Workspace disabled': 'Upload a report'}}" ng-disabled="workspaceData.readonly == true">
                         <img src="images/icon-toolbar-upload.svg"/>
                     </button>
@@ -196,6 +196,8 @@
             </div>
             <!-- .reports -->
         </div>
+        <div ng-if="!workspace" id="reports-main" class="fila clearfix">
+            <h2>Vous n'avez pas l'autorisation d'accéder à cette page</h2></div>
         <!-- #reports-main -->
 
         <div id="vuln-preview">
@@ -611,8 +613,6 @@
                     </div>
             </div>
         </div>
-
-
 
         </div>
     </div>

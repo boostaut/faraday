@@ -12,6 +12,7 @@ angular.module('faradayApp')
         'workspacesFact',
         'vulnsManager',
         '$uibModal',
+        'ServerAPI',
         function ($scope,
                   $routeParams,
                   $location,
@@ -19,7 +20,8 @@ angular.module('faradayApp')
                   dashboardSrv,
                   workspacesFact,
                   vulnsManager,
-                  $uibModal) {
+                  $uibModal,
+                  ServerAPI) {
 
             $scope.confirmed = ($cookies.get('confirmed') == undefined) ? false : JSON.parse($cookies.get('confirmed'));
             $scope.confirmed ? $cookies.put('filterConfirmed', "Confirmed"): $cookies.put('filterConfirmed', "All");
@@ -36,7 +38,8 @@ angular.module('faradayApp')
             // Ugly, ugly, ugly hack
             $scope.vulnsNum = vulnsManager.getVulnsNum($routeParams.wsId);
             $scope.totalVulns = vulnsManager.getTotalVulns($routeParams.wsId);
-            $scope.logo_url = "images/logo-faraday-blanco.svg";
+            //$scope.logo_url = "images/logo-faraday-blanco.svg";
+            $scope.logo_url = "images/logo_cisel.jpg"
             setInterval(function(){
                 $scope.vulnsNum = vulnsManager.getVulnsNum($routeParams.wsId);
                 $scope.totalVulns = vulnsManager.getTotalVulns($routeParams.wsId);
@@ -147,7 +150,9 @@ angular.module('faradayApp')
 
                     wss.forEach(function(ws){
                         // $scope.workspacesNames.push(ws.name);
-                        $scope.workspaces.push(ws);
+                        if ($scope.current_user.role_id == 1 || $scope.current_user.workspaces_id.includes(ws.id)){
+                            $scope.workspaces.push(ws);
+                        }
                     });
                 });
             };
@@ -158,7 +163,14 @@ angular.module('faradayApp')
                 if($routeParams.wsId)
                     vulnsManager.loadVulnsCounter($routeParams.wsId);
 
-                getWorkspaces();
+                $scope.$watch(loginSrv.isAuth, function(newValue) {
+                    loginSrv.getUser().then(function(user){
+                        ServerAPI.getUserById(user.user_id).then(function(response){
+                            $scope.current_user = JSON.parse(response.data)[0]
+                            getWorkspaces();
+                        })
+                    });
+                });
 
             };
 

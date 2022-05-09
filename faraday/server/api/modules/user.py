@@ -40,7 +40,13 @@ class UserView(GenericView):
             200:
               description: Ok
         """
-        user_list = User.query.all()
+        args = flask.request.args
+        user_list = []
+        if args.get("user_id"):
+          user_from_id = User.query.filter_by(id=args.get("user_id")).first()
+          user_list.append(user_from_id)
+        else :
+          user_list = User.query.all()
         user_list_json = []
         for user in user_list:
           role_id = 3
@@ -76,7 +82,10 @@ class UserView(GenericView):
               description: Ok
         """
         # BEGIN create a new user
-        user_json = json.loads(flask.request.data)
+        try :
+          user_json = json.loads(flask.request.data)
+        except Exception as e:
+          print("unable to load json")
         user = User.query.filter_by(username=user_json['username']).first()
         if user == None:
           try :

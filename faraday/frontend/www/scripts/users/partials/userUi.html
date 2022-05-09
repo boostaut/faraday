@@ -7,7 +7,7 @@
     <section id="main" class="seccion clearfix">
         <div class="left-main-without-pagination">
             <div ng-controller="headerCtrl" ng-include="'scripts/commons/partials/header.html'"></div>
-            <div id="reports-main" class="fila clearfix">
+            <div ng-if="current_user.role_id == 1" id="reports-main" class="fila clearfix">
             <div class="reports col-md-12 col-sm-12 col-xs-12">
                 <div class="button-control justify-flex-start  col-md-12 col-sm-12 col-xs-12">
                     <div class="control-wrapper control-new">
@@ -50,8 +50,17 @@
                 <div class="input-group">
                 <input style="width: 20em" type="text" class="form-control ng-pristine ng-valid ng-touched" placeholder="Nom d'utilisateur" id="name" required ng-model="newUser.username" name="username">
                 <input style="width: 20em" type="text" class="form-control ng-pristine ng-valid ng-touched" placeholder="Nom complet" id="name" required ng-model="newUser.name" name="name">
-                <input style="width: 20em" type="text" class="form-control ng-pristine ng-valid ng-touched" placeholder="Rôle" id="name" required ng-model="newUser.role" name="role">
-                <input style="width: 20em" type="text" class="form-control ng-pristine ng-valid ng-touched" placeholder="Workspace" id="name" required ng-model="newUser.workspace" name="workspace"><br>
+                <select style="width: 20em" class="form-control ng-pristine ng-valid ng-touched" name="role_id" ng-model="newUser.role_id">
+                    <option value="0">Sélectionner un rôle</option>
+                    <option value="1">Admin</option>
+                    <option value="3">Client</option>
+                </select>
+                
+                
+                <select style="width: 20em; height: 10em;" class="form-control ng-pristine ng-valid ng-touched" name="role" ng-model="newUser.workspaces_id" multiple>
+                    <option value="0">Sélectionner un ou plusieurs workspace(s)</option>
+                    <option ng-repeat="workspace in workspaces" ng-value="workspace.id">{{workspace.name}}</option>
+                </select>
                 <input style="width: 20em" type="password" class="form-control ng-pristine ng-valid ng-touched" placeholder="Mot de passe" id="name" required ng-model="newUser.password" name="password">
                 <input style="width: 20em" type="password" class="form-control ng-pristine ng-valid ng-touched" placeholder="Répéter mot de passe" id="name" required ng-model="newUser.repeated_password" name="repeated_password">
                 <button id="merge" type="button" class="btn btn-success btn-new" title="New Workspace" ng-click="addUser()">Ajouter</button>
@@ -79,21 +88,48 @@
                                 <span ng-if="user.id != currentEditedUserId" class="onhover upsize" ng-click="dashboardRedirect(ws.name)">
                                    <b>{{user.username}}</b>
                                 </span>
-                                <input ng-if="user.id == currentEditedUserId" style="width: 20em" type="text" class="form-control ng-pristine ng-valid ng-touched" id="name" required ng-model="user.username" name="username">
+                                <input ng-if="user.id == currentEditedUserId" style="width: 20em" type="text" class="form-control ng-pristine ng-valid ng-touched" id="name" required ng-model="editedUser.username" name="username">
                             </td>
                             <td class="ui-grid-cell-contents">
                                 <div ng-if="user.id != currentEditedUserId">
                                     {{user.name}}
                                 </div>
                                 <div ng-if="user.id == currentEditedUserId">
-                                    <input ng-if="user.id == currentEditedUserId" style="width: 20em" type="text" class="form-control ng-pristine ng-valid ng-touched" id="name" required ng-model="user.name" name="name">
+                                    <input ng-if="editedUser.id == currentEditedUserId" style="width: 20em" type="text" class="form-control ng-pristine ng-valid ng-touched" id="name" required ng-model="editedUser.name" name="name">
                                 </div>
                             </td>
-                            <td class="ui-grid-cell-contents"></td>
-                            <td class="ui-grid-cell-contents"></td>
+                            <td class="ui-grid-cell-contents">
+                                <div ng-if="user.id != currentEditedUserId">
+                                    <span ng-if="user.role_id == 1">Admin</span>
+                                    <span ng-if="user.role_id == 3">Client</span>
+                                </div>
+                                <div ng-if="user.id == currentEditedUserId">
+                                <select style="width: 20em" class="form-control ng-pristine ng-valid ng-touched" name="role_id" ng-model="editedUser.role_id">
+                                    <option value="0">Sélectionner un rôle</option>
+                                    <option value="1">Admin</option>
+                                    <option value="3">Client</option>
+                                </select>
+                                </div>
+                            </td>
+                            <td class="ui-grid-cell-contents">
+                                <div ng-if="user.id != currentEditedUserId">
+                                    <select disabled style="width: 20em; height: 10em;" class="form-control ng-pristine ng-valid ng-touched" name="workspace" ng-model="user.workspaces_id" multiple>  
+                                        <option value="0">Sélectionner un ou plusieurs workspace(s)</option>
+                                        <option ng-repeat="workspace in workspaces" ng-value="workspace.id">{{workspace.name}}</option>
+                                    </select>
+                                </div>
+
+                                <div ng-if="user.id == currentEditedUserId">
+                                    <select style="width: 20em; height: 10em;" class="form-control ng-pristine ng-valid ng-touched" name="workspace" ng-model="editedUser.workspaces_id" multiple>                   
+                                        <option value="0">Sélectionner un ou plusieurs workspace(s)</option>
+                                        <option ng-repeat="workspace in workspaces" ng-value="workspace.id">{{workspace.name}}</option>
+                                    </select>
+                                </div>
+                                
+                            </td>
                             <td class="ui-grid-cell-contents">
                                 <div ng-if="user.id == currentEditedUserId">
-                                    <input ng-if="user.id == currentEditedUserId" style="width: 20em" type="password" class="form-control ng-pristine ng-valid ng-touched" id="name" required ng-model="user.password" name="name">
+                                    <input ng-if="user.id == currentEditedUserId" style="width: 20em" type="password" class="form-control ng-pristine ng-valid ng-touched" id="name" required ng-model="editedUser.password" name="name">
                                 </div>
                             </td>
                             <td class="ui-grid-cell-contents">
@@ -101,39 +137,21 @@
                                     <button ng-if="user.username != 'faraday'" id="merge" type="button" class="btn btn-success btn-new" ng-click="editUser(user)">Modifier</button>
                                 </div>
                                 <div ng-if="user.id == currentEditedUserId" >
-                                    <button ng-if="user.username != 'faraday'" id="merge" type="button" style="width: min-content" class="btn btn-success btn-new" ng-click="updateUser(user)" value="test">Appliquer modification</button>
+                                    <button id="merge" type="button" style="width: min-content" class="btn btn-success btn-new" ng-click="cancelUpdateUser()" >Annuler modifications</button>
+                                    <button id="merge" type="button" style="width: min-content" class="btn btn-success btn-new" ng-click="updateUser(editedUser)" >Appliquer modifications</button>
                                 </div>
                                 </td>
                             <td class="ui-grid-cell-contents"><button ng-if="user.username != 'faraday'" ng-click="deleteUser(user.id)" type="button" style="width:30px" >
                                 <img  src="images/icon-toolbar-delete.svg" class="delete-icon">
                             </button></td>
-                            <!--<td class="ui-grid-cell-contents">{{ws.id}}</td> <!-- PS6 CODE -> display the workspace_id -->
-                            <!--<td class="ui-grid-cell-contents"><a href="#/status/ws/{{ws.name}}">{{objects[ws.name]['total_vulns']}}</a></td>-->
-                            <!--<td class="ui-grid-cell-contents"><a href="#/hosts/ws/{{ws.name}}">{{objects[ws.name]['hosts']}}</a></td>-->
-                            <!--<td class="ui-grid-cell-contents" ng-bind="objects[ws.name]['services']"></td>-->
-                            <!--<td class="ui-grid-cell-contents" ng-if="ws.duration.start_date" ng-bind="ws.duration.start_date | amTimeAgo"></td>-->
-                            <!--<td class="ui-grid-cell-contents" ng-if="!ws.duration.start_date">-</td>-->
-                            <!--<td class="ui-grid-cell-contents" ng-if="ws.duration.end_date" ng-bind="ws.duration.end_date | amTimeAgo"></td>-->
-                            <!--<td class="ui-grid-cell-contents" ng-if="!ws.duration.end_date">-</td>-->
-                            <!--<td class="ui-grid-cell-contents" ng-bind="ws.update_date | amTimeAgo"></td>-->
-                            <!--<td class="ui-grid-cell-contents active-toggle">
-                                <div class="toogle-img-container">
-                                    <span ng-click="activeToggle(ws)" class="active-toggle-container" ng-class="{ disabled:ws.active === false }" uib-tooltip="{{(ws.active === true) ? 'Disable workspace' : 'Enable workspace'}}" tooltip-placement="right">
-                                        <img ng-src="{{ (ws.active) ? 'images/ok-active.svg' : 'images/active.svg'}}" class="confirm-icon" ng-style="{ 'opacity': (ws.active === true) ? '1' : '0.7' }" />
-                                    </span>
-                                </div>
-                            </td>-->
-                            <!--<td class="ui-grid-cell-contents active-toggle">
-                                <div class="toogle-img-container">
-                                    <span ng-click="readonlyToggle(ws)" class="active-toggle-container" ng-class="{ disabled:ws.readonly === false }" uib-tooltip="{{(ws.readonly === false) ? 'Workspace with all permissions' : 'Workspace read only'}}" tooltip-placement="right">
-                                        <img ng-src="{{ (ws.readonly == true) ? 'images/padlock_closed.svg' : 'images/padlock_open.svg'}}" class="confirm-icon" ng-style="{ 'opacity': (ws.readonly === true) ? '1' : '0.7' }" />
-                                    </span>
-                                </div>
-                            </td>-->
+                            
                         </tr>
                     </tbody>
                 </table><!-- #hosts -->
             </div><!-- .reports -->
-        </div><!-- #reports-main --></div><!-- .right-main -->
+        </div><!-- #reports-main -->
+        <div ng-if="current_user.role_id != 1" id="reports-main" class="fila clearfix">
+            <h2>Vous n'avez pas l'autorisation d'accéder à cette page</h2></div>
+    </div><!-- .right-main -->
     </section><!-- #main -->
 </form>

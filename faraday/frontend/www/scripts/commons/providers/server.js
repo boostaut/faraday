@@ -470,6 +470,10 @@ angular.module("faradayApp")
                 return serverComm("GET", BASEURL+"_api/v3/user")
             }
 
+            ServerAPI.getUserById = function (user_id) {
+                return serverComm("GET", BASEURL+"_api/v3/user?user_id=" + user_id)
+            }
+
             ServerAPI.deleteUser = function (user_id) {
                 return serverComm("DELETE", BASEURL+"_api/v3/user?id="+user_id)
             }
