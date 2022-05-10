@@ -1,3 +1,4 @@
+# exclude logo
 faraday/frontend/www/images/logo_cisel.jpg
 
 *.py[cod]
