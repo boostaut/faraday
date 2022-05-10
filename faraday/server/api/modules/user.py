@@ -2,6 +2,8 @@
 # Copyright (C) 2016  Infobyte LLC (http://www.infobytesec.com/)
 # See the file 'doc/LICENSE' for the license information
 
+# BEGIN PS6 CODE #
+
 import flask
 from flask import Blueprint
 from marshmallow import Schema
@@ -211,3 +213,5 @@ class UserView(GenericView):
 
 
 UserView.register(user_api)
+
+# END PS6 CODE #

@@ -145,12 +145,10 @@ angular.module('faradayApp')
 
             getWorkspaces = function() {
                 workspacesFact.getWorkspaces().then(function(wss) {
-                    // $scope.workspacesNames = [];
                     $scope.workspaces = [];
 
                     wss.forEach(function(ws){
-                        // $scope.workspacesNames.push(ws.name);
-                        if ($scope.current_user.role_id == 1 || $scope.current_user.workspaces_id.includes(ws.id)){
+                        if ($scope.current_user.role_id == 1 || $scope.current_user.workspaces_id.includes(ws.id)){ // PS6 CODE, add workspace if it belongs to the current user
                             $scope.workspaces.push(ws);
                         }
                     });
@@ -162,7 +160,8 @@ angular.module('faradayApp')
                 $scope.workspace = $routeParams.wsId;
                 if($routeParams.wsId)
                     vulnsManager.loadVulnsCounter($routeParams.wsId);
-
+                /* BEGIN PS6 CODE */
+                // get current user details
                 $scope.$watch(loginSrv.isAuth, function(newValue) {
                     loginSrv.getUser().then(function(user){
                         ServerAPI.getUserById(user.user_id).then(function(response){
@@ -171,6 +170,7 @@ angular.module('faradayApp')
                         })
                     });
                 });
+                /* END PS6 CODE */
 
             };
 

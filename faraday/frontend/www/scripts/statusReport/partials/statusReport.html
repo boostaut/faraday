@@ -9,7 +9,8 @@
         <div ng-if="workspace" id="reports-main" class="fila clearfix">
             <div class="button-control col-md-12 col-sm-12 col-xs-12" id="btn_bar">                
                 <div class="control-wrapper control-new">
-                    <button ng-if="current_user.role_id == 1" type="button" class="btn btn-success btn-new" title="{{workspaceData.readonly == true ? 'Read-only. Workspace disabled': 'New Vulns'}}"  ng-click="new()" ng-disabled="workspaceData.readonly == true">
+                    <!-- Only admin user can view element-->
+                    <!-- PS6 CODE --><button ng-if="current_user.role_id == 1" type="button" class="btn btn-success btn-new" title="{{workspaceData.readonly == true ? 'Read-only. Workspace disabled': 'New Vulns'}}"  ng-click="new()" ng-disabled="workspaceData.readonly == true">
                         New
                     </button>
                 </div>
@@ -31,7 +32,7 @@
                         </thead>
                     </table>
                 <div class="control-wrapper control-edit">
-                    <button ng-if="current_user.role_id == 1" type="button" class="btn btn-default edit" title="{{workspaceData.readonly == true ? 'Read-only. Workspace disabled': 'Edit selected vulns'}}" ng-click="edit()" ng-disabled="getCurrentSelection().length != 1">
+                    <!-- PS6 CODE --><button ng-if="current_user.role_id == 1" type="button" class="btn btn-default edit" title="{{workspaceData.readonly == true ? 'Read-only. Workspace disabled': 'Edit selected vulns'}}" ng-click="edit()" ng-disabled="getCurrentSelection().length != 1">
                         <img src="images/icon-toolbar-edit.svg" class="edit-icon" />
                     </button>
                     <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" title="SingleActions" ng-show="getCurrentSelection().length === 1"  ng-disabled="workspaceData.readonly == true">
@@ -73,7 +74,7 @@
                     </ul>
                 </div>
                 <div class="control-wrapper">
-                    <button ng-if="current_user.role_id == 1" type="button" class="btn btn-default" title="{{workspaceData.readonly == true? 'Read-only. Workspace disabled': 'Delete selected items'}}" ng-click="delete()" ng-disabled="workspaceData.readonly == true">
+                    <!-- PS6 CODE --><button ng-if="current_user.role_id == 1" type="button" class="btn btn-default" title="{{workspaceData.readonly == true? 'Read-only. Workspace disabled': 'Delete selected items'}}" ng-click="delete()" ng-disabled="workspaceData.readonly == true">
                         <img src="images/icon-toolbar-delete.svg" class="delete-icon" />
                     </button>
                 </div>
@@ -95,7 +96,7 @@
                         <img src="images/icon-toolbar-download.svg" class="download-icon" />
                     </button>
                 </div>
-                <div ng-if="current_user.role_id == 1" class="control-wrapper download-wrapper" ng-hide="fileUploadEnabled === true">
+                <!-- PS6 CODE --><div ng-if="current_user.role_id == 1" class="control-wrapper download-wrapper" ng-hide="fileUploadEnabled === true">
                     <button ng-click="enableFileUpload()" type="button" class="btn btn-default" title="{{workspaceData.readonly == true ? 'Read-only. Workspace disabled': 'Upload a report'}}" ng-disabled="workspaceData.readonly == true">
                         <img src="images/icon-toolbar-upload.svg"/>
                     </button>
@@ -240,7 +241,7 @@
                             title="Change Ease of Resolution">
                         <span> <i class="fa fa-angle-down fa-lg" aria-hidden="true"></i> </span>
                     </button>
-                    <ul ng-if="current_user.role_id == 1" class="dropdown-menu dropdown-menu-right" role="menu">
+                    <!-- PS6 CODE --><ul ng-if="current_user.role_id == 1" class="dropdown-menu dropdown-menu-right" role="menu">
                         <li>
                              <a class="ws"
                                ng-click="changeEaseOfResolution(null)">Undetermined</a>
@@ -272,7 +273,7 @@
                             title="Change Status">
                         <span> <i class="fa fa-angle-down fa-lg" aria-hidden="true"></i> </span>
                     </button>
-                    <ul ng-if="current_user.role_id == 1" class="dropdown-menu dropdown-menu-right" role="menu">
+                    <!-- PS6 CODE --><ul ng-if="current_user.role_id == 1" class="dropdown-menu dropdown-menu-right" role="menu">
                         <li>
                             <a class="ws"
                                ng-click="changeStatus('opened')">Opened</a>
@@ -289,8 +290,8 @@
                 <div class="col-md-2 col-sm-4 col-xs-4">
                     <label class="chbox-container">
                         <div class="tab-pane-header"><h4>Confirmed</h4></div>
-                        <input ng-if="current_user.role_id == 1" type="checkbox"  ng-checked="lastClickedVuln.confirmed === true"  ng-model="lastClickedVuln.confirmed" ng-change="changeConfirmed(lastClickedVuln.confirmed)">
-                        <input ng-if="current_user.role_id != 1" type="checkbox"  ng-checked="lastClickedVuln.confirmed === true"  ng-value="lastClickedVuln.confirmed">
+                        <!-- PS6 CODE --><input ng-if="current_user.role_id == 1" type="checkbox"  ng-checked="lastClickedVuln.confirmed === true"  ng-model="lastClickedVuln.confirmed" ng-change="changeConfirmed(lastClickedVuln.confirmed)">
+                        <!-- PS6 CODE --><input ng-if="current_user.role_id != 1" type="checkbox"  ng-checked="lastClickedVuln.confirmed === true"  ng-value="lastClickedVuln.confirmed">
                         <span class="checkmark"></span>
                     </label>
                 </div>

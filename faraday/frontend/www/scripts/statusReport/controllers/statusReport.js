@@ -133,7 +133,7 @@ angular.module("faradayApp")
                 $scope.selected = false;
                 $scope.vulnModelsManager = vulnModelsManager;
                 $scope.loading = true;
-                $scope.current_user
+                $scope.current_user // PS6 CODE, connected user
                 $scope.gridOptions = {
                     multiSelect: true,
                     enableSelectAll: true,
@@ -240,11 +240,11 @@ angular.module("faradayApp")
 
                 // current workspace
                 $scope.workspace = $routeParams.wsId;
-
-                $scope.$watch(loginSrv.isAuth, function (newValue) {
-                    loginSrv.getUser().then(function (user) {
+                /* BEGIN PS6 CODE */
+                $scope.$watch(loginSrv.isAuth, function (newValue) { 
+                    loginSrv.getUser().then(function (user) { // get current user
                         $scope.auth = newValue;
-                        ServerAPI.getUserById(user.user_id).then(function (response) {
+                        ServerAPI.getUserById(user.user_id).then(function (response) { // get current user details
                             $scope.current_user = JSON.parse(response.data)[0]
                             // load current workspace data
                             workspacesFact.get($scope.workspace).then(function (response) {
@@ -255,13 +255,12 @@ angular.module("faradayApp")
                                     $scope.workspace = null
                                     $scope.workspaceData = null
                                 }
-                                console.log("current workspace")
-                                console.log($scope.workspaceData)
                                 loadVulns();
                             });
                         })
                     });
                 });
+                /* END PS6 CODE */
 
 
                 $scope.interfaces = [];
@@ -1674,7 +1673,7 @@ angular.module("faradayApp")
             };
 
             $scope.activeEditPreview = function (field) {
-                if ($scope.current_user == 1){
+                if ($scope.current_user == 1){ // PS6 CODE, only admin user can modify
                     $scope.fieldToEdit = field;
                 }
             };
@@ -1754,7 +1753,7 @@ angular.module("faradayApp")
             };
 
             $scope.changeConfirmed = function (confirmed) {
-                if($scope.current_user.role_id == 1){
+                if($scope.current_user.role_id == 1){ // PS6 CODE, only admin user can edit
                     $scope.fieldToEdit = 'confirmed';
                     $scope.lastClickedVuln.confirmed = confirmed;
                     $scope.processToEditPreview();

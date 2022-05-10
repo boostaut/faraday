@@ -297,11 +297,12 @@ faradayApp.config(['$routeProvider', '$uibTooltipProvider', 'BASEURL',
             controller: 'workspacesCtrl',
             title: 'Workspaces | '
         }).
+        /* BEGIN PS6 CODE */
         when('/users', {
             templateUrl: 'scripts/users/partials/userUi.html',
             controller: 'usersCtrl'
-            //title: 'Users |'
         }).
+        /* END PS6 CODE */
         when('/comparison', {
             templateUrl: 'scripts/commons/partials/commercial.html',
             controller: 'commercialCtrl'
