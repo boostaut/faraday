@@ -1674,7 +1674,9 @@ angular.module("faradayApp")
             };
 
             $scope.activeEditPreview = function (field) {
-                $scope.fieldToEdit = field;
+                if ($scope.current_user == 1){
+                    $scope.fieldToEdit = field;
+                }
             };
 
             $scope.processToEditPreview = function (isMandatory) {
@@ -1752,9 +1754,11 @@ angular.module("faradayApp")
             };
 
             $scope.changeConfirmed = function (confirmed) {
-                $scope.fieldToEdit = 'confirmed';
-                $scope.lastClickedVuln.confirmed = confirmed;
-                $scope.processToEditPreview();
+                if($scope.current_user.role_id == 1){
+                    $scope.fieldToEdit = 'confirmed';
+                    $scope.lastClickedVuln.confirmed = confirmed;
+                    $scope.processToEditPreview();
+                }
             };
 
             $scope.toggleImpact = function (key) {

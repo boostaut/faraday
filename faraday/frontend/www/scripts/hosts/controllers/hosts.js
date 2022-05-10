@@ -17,6 +17,7 @@ angular.module('faradayApp')
         'credential',
         '$http',
         'BASEURL',
+        'ServerAPI',
         function ($scope,
                   $cookies,
                   $filter,
@@ -29,7 +30,8 @@ angular.module('faradayApp')
                   commonsFact,
                   credential,
                   $http,
-                  BASEURL) {
+                  BASEURL,
+                  ServerAPI) {
 
         var init = function() {
             $scope.selectall_hosts = false;
@@ -64,6 +66,15 @@ angular.module('faradayApp')
             // load current workspace data
             workspacesFact.get($scope.workspace).then(function(response) {
                 $scope.workspaceData = response;
+            });
+
+            $scope.$watch(loginSrv.isAuth, function (newValue) {
+                loginSrv.getUser().then(function (user) {
+                    $scope.auth = newValue;
+                    ServerAPI.getUserById(user.user_id).then(function (response) {
+                        $scope.current_user = JSON.parse(response.data)[0]
+                    })
+                });
             });
 
             $scope.sortField = "vulns";

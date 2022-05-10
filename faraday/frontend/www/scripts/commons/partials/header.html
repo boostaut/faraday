@@ -41,7 +41,7 @@
         <button ng-if="showSwitcher() && workspace && current_user.role_id == 1" type="button" class="btn" title="Edit current workspace" ng-click="editWorkspace()">
             <span class="glyphicon glyphicon-cog"></span>
         </button>
-        <span ng-if="location === 'dashboard' && workspace" class="control-wrapper filter-wrapper">
+        <span ng-if="location === 'dashboard' && workspace && current_user.role_id == 1" class="control-wrapper filter-wrapper">
             <button type="button" class="btn confirm-button" title="{{ confirmed === true ? 'All vulns' : 'Confirmed vulns' }}" ng-click="toggleConfirmed()">
                 <img ng-src="{{ confirmed === true ? 'images/icon-toolbar-confirmed-on.svg' : 'images/icon-toolbar-confirmed-off.svg'}}" class="confirm-icon" ng-style="{ 'opacity': (confirmed === true) ? '1' : '0.7' }" />
             </button>
@@ -52,7 +52,7 @@
         <div ng-controller="loginBarCtrl">
             <div class="btn-group dropdown" ng-if="auth" uib-dropdown="" is-open="status.isopen">
                 <button id="single-button" type="button" class="btn btn-default dropdown-toggle user-dropdown" uib-dropdown-toggle="" ng-disabled="disabled" aria-haspopup="true" aria-expanded="true">
-                    <span>{{user.name}} </span>
+                    <span>{{current_user.name}} </span>
                     <i class="glyphicon glyphicon-user"></i>
                     <span class="caret"></span>
                 </button>

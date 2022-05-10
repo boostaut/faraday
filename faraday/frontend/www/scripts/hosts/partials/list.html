@@ -8,7 +8,7 @@
         <div ng-controller="headerCtrl" ng-include="'scripts/commons/partials/header.html'"></div>
         <div id="reports-main" class="fila clearfix">
             <div class="button-control col-md-12 col-sm-12 col-xs-12">
-                <div class="control-wrapper control-new">
+                <div ng-if="current_user.role_id == 1" class="control-wrapper control-new">
                     <button type="button" class="btn btn-success btn-new" title="{{workspaceData.readonly == true ? 'Read-only. Workspace disabled': 'New hosts'}}" ng-click="new()" ng-disabled="workspaceData.readonly === true">
                         New
                     </button>
@@ -27,27 +27,15 @@
                             </a>
                             <div class="flex-spacer"></div>
                         </th>
-                        <th class="col-s-1">
-                            <a href="#/credentials/ws/{{workspace}}" class="workspaces" ng-class="{'navigation-active' : component == 'credentials'}" style="color: black !important; font-weight: bold; font-size: 15px;" uib-tooltip="Credentials" tooltip-placement="right">
-                                Credentials
-                            </a>
-                            <div class="flex-spacer"></div>
-                        </th>
-                        <th class="col-md-1" style = "border-right: 1px solid rgb(221, 221, 221); padding-right: 12px">
-                            <a href="#/taskgroup" class="executive-report" ng-class="{'navigation-active' : component == 'taskgroup'}" style="color: black !important; font-weight: bold; font-size: 15px;">
-                                Tasks
-                            </a>
-                            <div class="flex-spacer"></div>
-                        </th>
                     </tr>
                 </thead>
             </table>
-                <div class="control-wrapper control-edit">
+                <div ng-if="current_user.role_id == 1" class="control-wrapper control-edit">
                     <button type="button" class="btn btn-default edit" title="{{workspaceData.readonly == true ? 'Read-only. Workspace disabled': 'Edit selected hosts'}}" ng-disabled="selectedHosts().length > 1" ng-click="edit()">
                         <img src="images/icon-toolbar-edit.svg" class="edit-icon" />
                     </button>
                 </div>
-                <div class="control-wrapper">
+                <div ng-if="current_user.role_id == 1" class="control-wrapper">
                     <button type="button" class="btn btn-default" title="{{workspaceData.readonly == true ? 'Read-only. Workspace disabled': 'Delete selected items'}}" ng-click="delete()" ng-disabled="workspaceData.readonly === true">
                         <img src="images/icon-toolbar-delete.svg" class="delete-icon" />
                     </button>
@@ -65,7 +53,7 @@
                         </div>
                     </form>
                 </div>
-                <div class="control-wrapper download-wrapper">
+                <div ng-if="current_user.role_id == 1"  class="control-wrapper download-wrapper">
                     <button ng-click="enableFileUpload()" type="button" class="btn btn-default" title="{{workspaceData.readonly == true ? 'Read-only. Workspace disabled': 'Upload CSV with hosts'}}" ng-disabled="workspaceData.readonly == true">
                         <img src="images/icon-toolbar-upload.svg"/>
                     </button>
@@ -91,7 +79,7 @@
                 <table class="status-report-grid hosts-list table table-responsive">
                     <thead>
                         <tr class="ui-grid-header ">
-                            <th class="ui-grid-cell-contents ui-grid-header-cell hosts-list-checkall">
+                            <th ng-if="current_user.role_id == 1" class="ui-grid-cell-contents ui-grid-header-cell hosts-list-checkall">
                                 <input type="checkbox" ng-model="selectall" ng-click="checkAll()"/>
                             </th>
                             <th class="ui-grid-cell-contents ui-grid-header-cell" ng-show="columns['id']">
@@ -164,7 +152,7 @@
                         <tr ng-repeat="host in hosts" class="ui-grid-row "
                             selection-model selection-model-mode="multiple-additive"
                                             selection-model-on-change="selectedHosts()">
-                            <td class="ui-grid-cell-contents checkbox-select">
+                            <td ng-if="current_user.role_id == 1" class="ui-grid-cell-contents checkbox-select">
                                 <div class="">
                                     <input type="checkbox" ng-model="host.selected" ng-click="host.selected = !host.selected" name="{{host._id}}"/>
                                 </div>

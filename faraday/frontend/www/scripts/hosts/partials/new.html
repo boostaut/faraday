@@ -2,20 +2,20 @@
 <!-- Copyright (C) 2013  Infobyte LLC (http://www.infobytesec.com/) -->
 <!-- See the file 'doc/LICENSE' for the license information -->
 
-            <section id="main" class="seccion clearfix">
+            <section  id="main" class="seccion clearfix">
                 <div class="faraday-header-border-fix">
                     <div ng-controller="headerCtrl" ng-include="'scripts/commons/partials/header.html'"></div>
-                    <div id="reports-main" class="fila clearfix">
+                    <div ng-if="current_user.role_id == 1" id="reports-main" class="fila clearfix">
                     <div class="reports col-md-8 col-sm-8 col-xs-8 pr" style="border-right: 1px solid #CCC">
                         <form name="form">
                             <h3>
                                 Create a host
                                 <span style="float:right">
-                                    <a class="btn btn-sm btn-default" href="#/host/ws/{{workspace}}/hid/{{host._id}}/edit" ng-if="!editing">
+                                    <a ng-if="current_user.role_id == 1" class="btn btn-sm btn-default" href="#/host/ws/{{workspace}}/hid/{{host._id}}/edit" ng-if="!editing">
                                         <span class="glyphicon glyphicon-pencil"></span>
                                         Edit
                                     </a>
-                                    <button type="button" class="btn btn-sm btn-default" title="Delete host" ng-click="deleteHost()" ng-if="!editing">
+                                    <button ng-if="current_user.role_id == 1" type="button" class="btn btn-sm btn-default" title="Delete host" ng-click="deleteHost()" ng-if="!editing">
                                         <span class="glyphicon glyphicon-trash"></span>
                                         Delete
                                     </button>
@@ -94,5 +94,7 @@
                             </div>
                         </div>
                     </div>
-                </div><!-- #reports-main --></div><!-- .right-main -->
+                </div>
+                <div ng-if="current_user.role_id != 1"><h1>Accès interdit</h1></div>
+                <!-- #reports-main --></div><!-- .right-main -->
             </section><!-- #main -->
