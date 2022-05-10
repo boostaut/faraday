@@ -2,6 +2,10 @@
 // Copyright (C) 2013  Infobyte LLC (http://www.infobytesec.com/)
 // See the file 'doc/LICENSE' for the license information
 
+// Description : class for user management
+// Author : Bastien Chatelain (T-3a) - HEIA-FR - SEMESTER PROJECT 6
+// last modification date : 10.05.2022
+
 angular.module('faradayApp') // import ServerAPI to do HTTP request
     .controller('usersCtrl', ['$uibModal', '$scope', '$q','usersFact', 'dashboardSrv', '$location', '$cookies', 'ServerAPI', 'workspacesFact', // PS6 CODE
         function ($uibModal, $scope, $q, usersFact, dashboardSrv, $location, $cookies, ServerAPI, workspacesFact) { // PS6 CODE

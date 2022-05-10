@@ -2,6 +2,10 @@
 // Copyright (C) 2013  Infobyte LLC (http://www.infobytesec.com/)
 // See the file 'doc/LICENSE' for the license information
 
+// Description : class used to fetch user data from the ServerAPI 
+// Author : Bastien Chatelain (T-3a) - HEIA-FR - SEMESTER PROJECT 6
+// last modification date : 10.05.2022
+
 angular.module('faradayApp')
     .factory('usersFact', ['BASEURL', 'ServerAPI', '$http', '$q', '$rootScope', function(BASEURL, ServerAPI, $http, $q, $rootScope) {
         var usersFact = {};
