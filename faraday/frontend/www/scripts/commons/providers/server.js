@@ -459,7 +459,7 @@ angular.module("faradayApp")
                 }
                 return serverComm("POST", DATACOLLECTORURL + "workspaceKey", JSON.stringify(data))
             }
-            /* END PS6 CODE */
+            
 
             /*
                 * Get all user
@@ -470,23 +470,44 @@ angular.module("faradayApp")
                 return serverComm("GET", BASEURL+"_api/v3/user")
             }
 
+            /*
+                * Get user details from id
+                * param : user_id
+                * return : promise of the HTTP response
+            */
             ServerAPI.getUserById = function (user_id) {
                 return serverComm("GET", BASEURL+"_api/v3/user?user_id=" + user_id)
             }
 
+            /*
+                * Delete a user from id
+                * param : user_id
+                * return : promise of the HTTP response
+            */
             ServerAPI.deleteUser = function (user_id) {
                 return serverComm("DELETE", BASEURL+"_api/v3/user?id="+user_id)
             }
 
+            /*
+                * Add a user
+                * param : user object
+                * return : promise of the HTTP response
+            */
             ServerAPI.addUser = function (user) {
                 console.log("create user")
                 return serverComm("POST", BASEURL+"_api/v3/user", JSON.stringify(user))
             }
 
+            /*
+                * Update a user
+                * param : user object
+                * return : promise of the HTTP response
+            */
             ServerAPI.updateUser = function (user) {
                 console.log("update user")
                 return serverComm("PATCH", BASEURL+"_api/v3/user", JSON.stringify(user))
             }
+            /* END PS6 CODE */
 
              ServerAPI.getCustomFields = function () {
                 return get(APIURL + "custom_fields_schema");
