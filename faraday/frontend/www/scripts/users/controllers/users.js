@@ -30,6 +30,15 @@ angular.module('faradayApp') // import ServerAPI to do HTTP request
                         $scope.auth = newValue;
                         ServerAPI.getUserById(user.user_id).then(function (response) {
                             $scope.current_user = JSON.parse(response.data)[0]
+                            // get all users
+                            usersFact.getUsers().then(function (users) {
+                                users.forEach((user, index) => {
+                                    // convert number values to String for compatibility with HTML elements
+                                    users[index].role_id = user.role_id.toString()
+                                    users[index].workspaces_id = user.workspaces_id.map(String)
+                                });
+                                $scope.users = users
+                            });
                         })
                     });
                 });
